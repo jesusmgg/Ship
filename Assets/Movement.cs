@@ -39,7 +39,7 @@ public class Movement : MonoBehaviour
 
     bool CheckCollision(Vector2 position)
     {
-        if (collider.bounds.Intersects())
+        //if (collider.bounds.Intersects())
         
         return true;
     }
