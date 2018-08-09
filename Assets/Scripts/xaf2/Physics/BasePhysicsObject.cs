@@ -19,6 +19,7 @@ namespace xaf2.Physics
         protected Rigidbody2D rigidBody2D;
         
         public Vector2 TargetVelocity { get; set; }
+        public Vector2 Velocity => velocity;
         public bool Grounded { get; set; }
 
         void OnEnable()

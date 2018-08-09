@@ -19,14 +19,16 @@ namespace xaf2.Animation
 
         void Update()
         {
-            bool flipSprite = spriteRenderer.flipX ? input.Direction.x > 0.01f : input.Direction.x < 0.01f;
+            bool flipSprite = spriteRenderer.flipX ? input.Direction.x > 0.01f : input.Direction.x < -0.01f;
             if (flipSprite)
             {
                 spriteRenderer.flipX = !spriteRenderer.flipX;
             }
-
+            
             animator.SetBool("grounded", physicsObject.Grounded);
-            animator.SetFloat("velocityX", Mathf.Abs(input.Direction.x) / physicsObject.maxSpeed);
+            animator.SetFloat("velocityX", Mathf.Abs(physicsObject.Velocity.x));
+            animator.SetFloat("velocityY", physicsObject.Velocity.y);
+            animator.SetBool("jump", input.GetButtonDown("Jump"));
         }
     }
 }
