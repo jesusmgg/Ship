@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace xaf2.Input
+namespace Ship.Input
 {
     public abstract class BaseInput : BaseComponent
     {

@@ -1,4 +1,4 @@
-﻿namespace xaf2.Stats
+﻿namespace Ship.Stats
 {
     public class BaseStats : BaseComponent
     {

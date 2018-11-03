@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace xaf2
+namespace Ship
 {
     public abstract class BaseComponent : MonoBehaviour
     {

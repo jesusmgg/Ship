@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace xaf2.Animation
+namespace Ship.Animation
 {
     public class BaseAnimationController : BaseComponent
     {

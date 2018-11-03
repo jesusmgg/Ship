@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using xaf2.Input;
+using Ship.Input;
 
-namespace xaf2.Physics
+namespace Ship.Physics
 {
     public class BasePhysicsObject : BaseComponent
     {

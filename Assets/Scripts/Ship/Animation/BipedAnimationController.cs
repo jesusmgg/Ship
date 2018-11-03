@@ -1,8 +1,8 @@
-﻿using UnityEngine;
-using xaf2.Input;
-using xaf2.Physics;
+﻿using Ship.Input;
+using Ship.Physics;
+using UnityEngine;
 
-namespace xaf2.Animation
+namespace Ship.Animation
 {
     public class BipedAnimationController : BaseAnimationController
     {
