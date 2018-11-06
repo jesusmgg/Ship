@@ -7,14 +7,16 @@ namespace Ship.Physics
     {
         public float minGroundNormalY = .65f;
         public float gravityModifier = 1f;
+
+        public bool usePhysics = true;
         
         protected Vector2 groundNormal;
         protected Vector2 velocity;
         protected ContactFilter2D contactFilter;
         protected RaycastHit2D[] hitBuffer = new RaycastHit2D[16];
 
-        protected const float minMoveDistance = 0.001f;
-        protected const float shellRadius = 0.01f;
+        protected const float MinMoveDistance = 0.001f;
+        protected const float ShellRadius = 0.01f;
         
         protected Rigidbody2D rigidBody2D;
         
@@ -27,14 +29,14 @@ namespace Ship.Physics
             rigidBody2D = GetComponent<Rigidbody2D>();
         }
 
-        void Start()
+        protected virtual void Start()
         {
             contactFilter.useTriggers = false;
             contactFilter.SetLayerMask(Physics2D.GetLayerCollisionMask(gameObject.layer));
             contactFilter.useLayerMask = true;
         }
 
-        void Update()
+        protected virtual void Update()
         {
             TargetVelocity = Vector2.zero;
             ComputeVelocity();
@@ -47,31 +49,36 @@ namespace Ship.Physics
 
         void FixedUpdate()
         {
-            velocity += gravityModifier * Physics2D.gravity * Time.deltaTime;
-            velocity.x = TargetVelocity.x;
+            if (usePhysics)
+            {
+                velocity += gravityModifier * Physics2D.gravity * Time.deltaTime;
+                velocity.x = TargetVelocity.x;
 
-            Grounded = false;
+                Grounded = false;
 
-            Vector2 deltaPosition = velocity * Time.deltaTime;
+                Vector2 deltaPosition = velocity * Time.deltaTime;
 
-            Vector2 moveAlongGround = new Vector2(groundNormal.y, -groundNormal.x);
+                //Vector2 moveAlongGround = new Vector2(groundNormal.y, -groundNormal.x);
 
-            Vector2 move = moveAlongGround * deltaPosition.x;
+                //Vector2 move = moveAlongGround * deltaPosition.x;
 
-            Movement(move, false);
+                Vector2 move = new Vector2(deltaPosition.x, 0.0f);
 
-            move = Vector2.up * deltaPosition.y;
+                Movement(move, false);
 
-            Movement(move, true);
+                move = Vector2.up * deltaPosition.y;
+
+                Movement(move, true);
+            }
         }
 
         void Movement(Vector2 move, bool yMovement)
         {
             float distance = move.magnitude;
 
-            if (distance > minMoveDistance)
+            if (distance > MinMoveDistance)
             {
-                int count = rigidBody2D.Cast(move, contactFilter, hitBuffer, distance + shellRadius);
+                int count = rigidBody2D.Cast(move, contactFilter, hitBuffer, distance + ShellRadius);
                 for (int i = 0; i < count; i++)
                 {
                     Vector2 currentNormal = hitBuffer[i].normal;
@@ -91,12 +98,13 @@ namespace Ship.Physics
                         velocity = velocity - projection * currentNormal;
                     }
 
-                    float modifiedDistance = hitBuffer[i].distance - shellRadius;
+                    float modifiedDistance = hitBuffer[i].distance - ShellRadius;
                     distance = modifiedDistance < distance ? modifiedDistance : distance;
                 }
             }
 
-            rigidBody2D.position = rigidBody2D.position + move.normalized * distance;
+            //rigidBody2D.position = rigidBody2D.position + move.normalized * distance;
+            transform.Translate(move.normalized * distance);
         }
     }
 }

@@ -9,11 +9,25 @@ namespace Ship.Physics
         public float maxSpeed = 7;
         public float jumpTakeOffSpeed = 7;
         
+        public bool useRandomSpeed = false;
+        public float minRandomSpeed = 5.0f;
+        public float maxRandomSpeed = 7.0f;
+        
         BaseInput input;
 
         void Awake()
         {
             input = GetComponent<BaseInput>();
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+
+            if (useRandomSpeed)
+            {
+                maxSpeed = Random.Range(minRandomSpeed, maxRandomSpeed);
+            }
         }
 
         protected override void ComputeVelocity()
