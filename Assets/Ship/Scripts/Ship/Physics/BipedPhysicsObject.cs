@@ -1,4 +1,5 @@
 ﻿using Ship.Input;
+using Ship.Props;
 using UnityEngine;
 
 namespace Ship.Physics
@@ -12,12 +13,17 @@ namespace Ship.Physics
         public bool useRandomSpeed = false;
         public float minRandomSpeed = 5.0f;
         public float maxRandomSpeed = 7.0f;
+
+        public bool isJumping;
+        public Lift jumpLift;
         
         BaseInput input;
+        Collider2D collider;
 
         void Awake()
         {
             input = GetComponent<BaseInput>();
+            collider = GetComponent<Collider2D>();
         }
 
         protected override void Start()
@@ -28,6 +34,8 @@ namespace Ship.Physics
             {
                 maxSpeed = Random.Range(minRandomSpeed, maxRandomSpeed);
             }
+
+            isJumping = false;
         }
 
         protected override void ComputeVelocity()
@@ -36,9 +44,15 @@ namespace Ship.Physics
 
             move.x = input.Direction.x;
 
+            bool jumpFrame = false;
+
             if (input.GetButtonDown("Jump") && Grounded)
             {
                 velocity.y = jumpTakeOffSpeed;
+                isJumping = true;
+                jumpFrame = true;
+
+                jumpLift = currentLift;
             }
             else if (input.GetButtonUp("Jump"))
             {
@@ -49,6 +63,50 @@ namespace Ship.Physics
             }
             
             TargetVelocity = move * maxSpeed;
+            
+            if (isJumping)
+            {
+                if (Grounded && !jumpFrame)
+                {
+                    isJumping = false;
+                    jumpLift = null;
+                }
+                else if (jumpLift != null)
+                {
+                    int layerMask = 1 << gameObject.layer;
+                    layerMask = ~layerMask;
+
+                    RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up, Mathf.Infinity, layerMask);
+                    if (hit)
+                    {
+                        if (hit.collider.CompareTag("Lift"))
+                        {
+                            if (hit.collider.gameObject.GetComponent<Lift>() == jumpLift)
+                            {
+                                Vector2 translation = jumpLift.deltaPosition;
+                                if (jumpLift.deltaPosition.y < 0)
+                                {
+                                    translation.y = 0;
+                                }
+                                
+                                transform.Translate(translation);
+                            }
+                            else
+                            {
+                                jumpLift = null;
+                            }
+                        }
+                        else
+                        {
+                            jumpLift = null;
+                        }
+                    }
+                    else
+                    {
+                        jumpLift = null;
+                    }
+                }
+            }
         }
     }
 }

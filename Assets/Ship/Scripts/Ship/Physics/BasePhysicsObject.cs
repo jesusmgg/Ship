@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using Ship.Input;
+using Ship.Props;
 
 namespace Ship.Physics
 {
@@ -19,6 +19,8 @@ namespace Ship.Physics
         protected const float ShellRadius = 0.01f;
         
         protected Rigidbody2D rigidBody2D;
+
+        public Lift currentLift;
         
         public Vector2 TargetVelocity { get; set; }
         public Vector2 Velocity => velocity;
@@ -34,6 +36,8 @@ namespace Ship.Physics
             contactFilter.useTriggers = false;
             contactFilter.SetLayerMask(Physics2D.GetLayerCollisionMask(gameObject.layer));
             contactFilter.useLayerMask = true;
+
+            currentLift = null;
         }
 
         protected virtual void Update()
@@ -53,21 +57,21 @@ namespace Ship.Physics
             {
                 velocity += gravityModifier * Physics2D.gravity * Time.deltaTime;
                 velocity.x = TargetVelocity.x;
+                
+                if (currentLift != null)
+                {
+                    transform.Translate(currentLift.deltaPosition);
+                }
 
                 Grounded = false;
 
                 Vector2 deltaPosition = velocity * Time.deltaTime;
-
-                //Vector2 moveAlongGround = new Vector2(groundNormal.y, -groundNormal.x);
-
-                //Vector2 move = moveAlongGround * deltaPosition.x;
-
-                Vector2 move = new Vector2(deltaPosition.x, 0.0f);
-
+                
+                Vector2 moveAlongGround = new Vector2(groundNormal.y, -groundNormal.x);
+                Vector2 move = moveAlongGround * deltaPosition.x;
                 Movement(move, false);
 
                 move = Vector2.up * deltaPosition.y;
-
                 Movement(move, true);
             }
         }
@@ -102,9 +106,24 @@ namespace Ship.Physics
                     distance = modifiedDistance < distance ? modifiedDistance : distance;
                 }
             }
+            
+            transform.Translate(move.normalized * distance);    
+        }
 
-            //rigidBody2D.position = rigidBody2D.position + move.normalized * distance;
-            transform.Translate(move.normalized * distance);
+        void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.CompareTag("Lift"))
+            {
+                currentLift = other.GetComponent<Lift>();
+            }
+        }
+
+        void OnTriggerExit2D(Collider2D other)
+        {
+            if (other.CompareTag("Lift"))
+            {
+                currentLift = null;
+            }
         }
     }
 }
