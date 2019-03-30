@@ -17,6 +17,8 @@ namespace Ship.Physics
         public bool isJumping;
         public Lift jumpLift;
         
+        bool jumpFrame;
+        
         BaseInput input;
         Collider2D collider;
 
@@ -36,34 +38,11 @@ namespace Ship.Physics
             }
 
             isJumping = false;
+            jumpFrame = false;
         }
 
-        protected override void ComputeVelocity()
+        protected override void FixedUpdate()
         {
-            Vector2 move = Vector2.zero;
-
-            move.x = input.Direction.x;
-
-            bool jumpFrame = false;
-
-            if (input.GetButtonDown("Jump") && Grounded)
-            {
-                velocity.y = jumpTakeOffSpeed;
-                isJumping = true;
-                jumpFrame = true;
-
-                jumpLift = currentLift;
-            }
-            else if (input.GetButtonUp("Jump"))
-            {
-                if (velocity.y > 0)
-                {
-                    velocity.y *= 0.5f;
-                }
-            }
-            
-            TargetVelocity = move * maxSpeed;
-            
             if (isJumping)
             {
                 if (Grounded && !jumpFrame)
@@ -88,8 +67,8 @@ namespace Ship.Physics
                                 {
                                     translation.y = 0;
                                 }
-                                
-                                transform.Translate(translation);
+
+                                externalTranslation += translation;
                             }
                             else
                             {
@@ -107,6 +86,35 @@ namespace Ship.Physics
                     }
                 }
             }
+            
+            base.FixedUpdate();
+        }
+
+        protected override void ComputeVelocity()
+        {
+            jumpFrame = false;
+            
+            Vector2 move = Vector2.zero;
+
+            move.x = input.Direction.x;
+            
+            if (input.GetButtonDown("Jump") && Grounded)
+            {
+                velocity.y = jumpTakeOffSpeed;
+                isJumping = true;
+                jumpFrame = true;
+
+                jumpLift = currentLift;
+            }
+            else if (input.GetButtonUp("Jump"))
+            {
+                if (velocity.y > 0)
+                {
+                    velocity.y *= 0.5f;
+                }
+            }
+            
+            TargetVelocity = move * maxSpeed;
         }
     }
 }

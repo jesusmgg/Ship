@@ -12,6 +12,7 @@ namespace Ship.Physics
         
         protected Vector2 groundNormal;
         protected Vector2 velocity;
+        protected Vector2 externalTranslation;
         protected ContactFilter2D contactFilter;
         protected RaycastHit2D[] hitBuffer = new RaycastHit2D[16];
 
@@ -38,6 +39,7 @@ namespace Ship.Physics
             contactFilter.useLayerMask = true;
 
             currentLift = null;
+            externalTranslation = Vector2.zero;
         }
 
         protected virtual void Update()
@@ -51,12 +53,15 @@ namespace Ship.Physics
             TargetVelocity = Vector2.zero;
         }
 
-        void FixedUpdate()
+        protected virtual void FixedUpdate()
         {
             if (usePhysics)
             {
                 velocity += gravityModifier * Physics2D.gravity * Time.deltaTime;
                 velocity.x = TargetVelocity.x;
+                
+                transform.Translate(externalTranslation);
+                externalTranslation = Vector2.zero;
                 
                 if (currentLift != null)
                 {
