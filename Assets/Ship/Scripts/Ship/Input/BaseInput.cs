@@ -4,6 +4,7 @@ namespace Ship.Input
 {
     public abstract class BaseInput : BaseComponent
     {
+        public bool useInput = true;
         public Vector2 Direction { get; set; }
 
         public virtual bool GetButton(string button)
