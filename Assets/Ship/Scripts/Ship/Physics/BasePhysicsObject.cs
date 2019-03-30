@@ -5,8 +5,10 @@ namespace Ship.Physics
 {
     public class BasePhysicsObject : BaseComponent
     {
-        public float minGroundNormalY = .65f;
-        public float gravityModifier = 1f;
+        public float minGroundNormalY = 0.65f;
+        public float gravityModifier = 1.0f;
+        public float fallGravityMultiplier = 1.0f;
+        public float maxFallSpeed = 50.0f;
 
         public bool usePhysics = true;
         
@@ -57,8 +59,19 @@ namespace Ship.Physics
         {
             if (usePhysics)
             {
-                velocity += gravityModifier * Physics2D.gravity * Time.deltaTime;
+                float gravityMultiplier = 1.0f;
+                gravityMultiplier *= gravityModifier;
+                if (velocity.y < 0)
+                {
+                    gravityMultiplier *= fallGravityMultiplier;
+                }
+                velocity += gravityMultiplier * Physics2D.gravity * Time.deltaTime;
                 velocity.x = TargetVelocity.x;
+
+                if (velocity.y < -maxFallSpeed)
+                {
+                    velocity.y = -maxFallSpeed;
+                }
                 
                 transform.Translate(externalTranslation);
                 externalTranslation = Vector2.zero;

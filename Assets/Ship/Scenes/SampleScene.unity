@@ -4397,10 +4397,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minGroundNormalY: 0.65
   gravityModifier: 1
+  fallGravityMultiplier: 2
+  maxFallSpeed: 50
   usePhysics: 1
   currentLift: {fileID: 0}
   maxSpeed: 6
-  jumpTakeOffSpeed: 6
+  jumpTakeOffSpeed: 5.5
   useRandomSpeed: 0
   minRandomSpeed: 5
   maxRandomSpeed: 7
