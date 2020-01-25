@@ -1,14 +1,17 @@
 ﻿using System.Collections;
 using Ship.Input;
+using Ship.Utils.Types;
 using UnityEngine;
 
 namespace Ship.Weapons
 {
     public class BaseWeapon : BaseComponent
     {
+        [Header("Weapon")]
         public float reloadPeriod;
+        public Transform shootPoint; 
 
-        public bool canShoot = false;
+        protected bool canShoot = false;
         
         protected BaseInput input;
 
@@ -26,7 +29,7 @@ namespace Ship.Weapons
         {
             if (canShoot)
             {
-                if (input.GetButtonDown("Fire1"))
+                if (input.GetButton("Fire1"))
                 {
                     Shoot();
                 }

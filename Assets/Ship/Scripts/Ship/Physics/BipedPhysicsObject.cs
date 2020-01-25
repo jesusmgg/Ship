@@ -20,7 +20,7 @@ namespace Ship.Physics
         bool jumpFrame;
         
         BaseInput input;
-        Collider2D collider;
+        new Collider2D collider;
 
         void Awake()
         {
