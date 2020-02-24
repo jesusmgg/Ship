@@ -11,35 +11,9 @@ using UnityEngine;
 using System.Collections;
 using Pixelplacement;
 
-namespace Pixelplacement.TweenSystem
-{
-    public class TweenEngine : MonoBehaviour 
+namespace Pixelplacement.TweenSystem {     public class TweenEngine : MonoBehaviour
     {
-        //Public Methods:
-        public void ExecuteTween (TweenBase tween)
-        {
-            StartCoroutine (RunTween (tween));
-        }
 
-        //Coroutines:
-        //execute tween:
-        static IEnumerator RunTween (TweenBase tween)
-        {
-            Tween.activeTweens.Add (tween);
-
-            while (true) 
-            {
-                //tick tween:
-                if (!tween.Tick ())
-                {
-                    //clean up tween:
-                    Tween.activeTweens.Remove (tween);
-                    yield break;
-                }
-
-                //loop:
-                yield return null;	
-            }
-        }
+        public void ExecuteTween(TweenBase tween)         {             Tween.activeTweens.Add(tween);         }          private void Update()         {             for (int i = Tween.activeTweens.Count - 1; i >= 0; i--)             {                 if (!Tween.activeTweens[i].Tick()) Tween.activeTweens.RemoveAt(i);             }         }
     }
 }
