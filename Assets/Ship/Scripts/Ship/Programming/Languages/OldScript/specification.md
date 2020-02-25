@@ -1,3 +1,5 @@
+#OldScript
+
 Indentation levels indicates blocks.  
 `int`s are used as booleans, a value of `0` is false, every other value is true.  
 
@@ -12,6 +14,7 @@ Indentation levels indicates blocks.
 - `while <condition>:`
 - `continue`
 - `break`
+- `print <value>`
 - `// comment`
 - `or`
 - `and`
