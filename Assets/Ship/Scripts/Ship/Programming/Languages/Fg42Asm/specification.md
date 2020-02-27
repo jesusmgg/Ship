@@ -19,6 +19,8 @@
 - `msg source`: prints the source value to console.
 
 ### Arithmetic
+- `inc dest`: increments dest by 1.
+- `dec dest`: decrements dest by 1.
 - `add dest source`: adds source to dest and stores the result in `mem`.
 - `sub dest source`: subtracts source from dest and stores the result in `mem`.
 - `mul dest source`: multiplies source to dest and stores the result in `mem`.
